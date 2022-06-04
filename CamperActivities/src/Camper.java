@@ -1,0 +1,109 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class Camper implements Comparable<Camper>{
+	
+	private ArrayList<Period> schedule;
+	private String firstName;
+	private String lastName;
+	private Date enrollDate;
+	private LinkedList<Activity> prefs;
+	private int scheduleScore;
+	private boolean hasPlaceholder;
+	
+	public Camper(String firstName, String lastName, boolean lakePermission, Date enrollDate) {
+		this.schedule = new ArrayList<>();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.enrollDate = enrollDate;
+		this.scheduleScore = 0;
+		this.hasPlaceholder = false;
+		
+		for (int i = 0; i < 4; ++i) {
+			this.schedule.add(null);
+		}
+	}
+	
+	public boolean getPlaceholder() {
+		return this.hasPlaceholder;
+	}
+	
+	public void setPlaceholder(boolean p) {
+		this.hasPlaceholder = p;
+	}
+	
+	public String getFirstName() {
+		return this.firstName;
+	}
+	
+	public String getLastName() {
+		return this.lastName;
+	}
+	
+	public int getScore() {
+		return this.scheduleScore;
+	}
+	
+	public void setScore(int score) {
+		this.scheduleScore = score;
+	}
+	
+	public void addScore(int add) {
+		this.scheduleScore += add;
+	}
+	
+	public LinkedList<Activity> getPrefs() {
+		return this.prefs;
+	}
+	
+	public void addPrefs(LinkedList<Activity> prefs) {
+		this.prefs = prefs;
+	}
+	
+	public String getName() {
+		return this.firstName + " " + this.lastName;
+	}
+	
+	public ArrayList<Period> getSchedule() {
+		return this.schedule;
+	}
+
+	public Date getEnrollDate() {
+		return this.enrollDate;
+	}
+	
+	public boolean addPeriod(Period p, int n) {
+		if (schedule.get(n - 1) != null) {
+			return false;
+		}
+		schedule.add(n - 1, p);
+		return true;
+	}
+	
+	public boolean enrollCamper(Period p) {
+		if (schedule.get(p.getOrder() - 1) == null) {
+			if (p.getEnrolled() != p.getCapacity()) {
+				if (p.enrollCamper(this)) {
+					this.schedule.remove(p.getOrder() - 1);
+					this.schedule.add(p.getOrder() - 1, p);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void addSchedule(ArrayList<Period> sched) {
+		this.schedule = sched;
+	}
+	
+	@Override
+	public int compareTo(Camper c) {
+		return this.enrollDate.compareTo(c.getEnrollDate());
+	}
+	
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+}
