@@ -38,11 +38,21 @@ public class Main {
 		}
 
 		Scanner camperInfo = new Scanner(selectedFile);
-		camperInfo.nextLine(); // Skip first line, it's titles
+//		camperInfo.nextLine(); // Skip first line, it's titles
 
 		generateActivities();
-		mapCampersToPrefs(camperInfo);
-		GUI.createGUI(activities.keySet());
+//		mapCampersToPrefs(camperInfo);
+		
+		GUI gui = new GUI();
+		gui.chooseActivityPeriods(activities.keySet());
+		
+		boolean[][] checks = gui.getChecks();
+		for (int i = 0; i < checks.length; ++i) {
+			for (int j = 0; j < checks[0].length; ++j) {
+				System.out.print(checks[i][j] + "\t");
+			}
+			System.out.println();
+		}
 
 		Collections.sort(campers);
 
