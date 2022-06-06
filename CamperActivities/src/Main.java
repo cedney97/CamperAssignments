@@ -40,7 +40,7 @@ public class Main {
 		}
 
 		Scanner camperInfo = new Scanner(selectedFile);
-		camperInfo.nextLine(); // Skip first line, it's titles
+//		camperInfo.nextLine(); // Skip first line, it's titles
 
 		generateActivities();
 		mapCampersToPrefs(camperInfo);

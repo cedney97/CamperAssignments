@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.*;
 
@@ -14,7 +13,7 @@ public class GUI {
 	private List<String> activities;
 	private JCheckBox[][] actChecks;
 	private boolean[][] checks;
-	private JButton submit;
+	private J
 	private String[] periods = {"First Period", "Second Period", "Third Period", "Fourth Period"};
 	
 	public GUI(List<String> acts) {
@@ -24,23 +23,23 @@ public class GUI {
 	}
 	
 	public void chooseActivityPeriods() {
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new GridLayout(0, 5));
+		JPanel checkPanel = new JPanel();
+		checkPanel.setLayout(new GridLayout(0, 5));
 		
 		for (int i = 0; i < activities.size(); ++i) {
 			JLabel label = new JLabel(activities.get(i));
-			centerPanel.add(label);
+			checkPanel.add(label);
 			
 			JCheckBox[] temp = new JCheckBox[4];
 			for (int j = 0; j < 4; j++) {
 				temp[j] = new JCheckBox(periods[j]);
 				temp[j].setSelected(true);
 				actChecks[i][j] = temp[j];
-				centerPanel.add(temp[j]);
+				checkPanel.add(temp[j]);
 			}
 		}
 		
-		Object[] params = {"Check the available activity periods", centerPanel};
+		Object[] params = {"Check the available activity periods", checkPanel};
 		
 		JOptionPane.showMessageDialog(null, params);
 		
@@ -55,4 +54,11 @@ public class GUI {
 		return this.checks;
 	}
 
+	
+	public void chooseActivityCapicities() {
+		JPanel capacityPanel = new JPanel();
+		capacityPanel.setLayout(new GridLayout(0, 5));
+		
+		
+	}
 }
