@@ -11,40 +11,21 @@ import javax.swing.*;
 
 public class GUI {
 	
-	private JFrame frame;
+	private List<String> activities;
 	private JCheckBox[][] actChecks;
 	private boolean[][] checks;
 	private JButton submit;
+	private String[] periods = {"First Period", "Second Period", "Third Period", "Fourth Period"};
 	
-	public GUI() {
-		frame = new JFrame("For Camper Assignment!");
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(800, 500);
-		frame.setVisible(false);
-		frame.setResizable(true);
+	public GUI(List<String> acts) {
+		activities = acts;
+		actChecks = new JCheckBox[activities.size()][4];
+		checks = new boolean[activities.size()][4];
 	}
 	
-	public void chooseActivityPeriods(Set<String> acts) {
-		List<String> activities = new LinkedList<>();
-		
-		for (String s : acts) {
-			activities.add(s);
-		}
-		
-		Collections.sort(activities);
-	
-		JPanel contentPane = new JPanel();
-		contentPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout());
-		
-		frame.setTitle("Check the Activity Periods Available!");
+	public void chooseActivityPeriods() {
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridLayout(0, 5));
-	
-		String[] periods = {"First Period", "Second Period", "Third Period", "Fourth Period"};
-		
-		actChecks = new JCheckBox[activities.size()][periods.length];
 		
 		for (int i = 0; i < activities.size(); ++i) {
 			JLabel label = new JLabel(activities.get(i));
@@ -59,30 +40,15 @@ public class GUI {
 			}
 		}
 		
-		contentPane.add(centerPanel, BorderLayout.PAGE_START);
+		Object[] params = {"Check the available activity periods", centerPanel};
 		
-		JPanel footerPanel = new JPanel();
+		JOptionPane.showMessageDialog(null, params);
 		
-		submit = new JButton("Submit");
-		
-		footerPanel.add(submit);
-		contentPane.add(footerPanel, BorderLayout.PAGE_END);
-		
-		frame.setContentPane(contentPane);
-		frame.pack();
-		frame.setLocationByPlatform(true);
-		frame.setVisible(true);
-		
-		frame.add(submit);
-
-		frame.setVisible(true);
-		
-		submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-				System.out.println(actChecks[0][0].isSelected());
+		for (int i = 0; i < activities.size(); ++i) {
+			for (int j = 0; j < periods.length; ++j) {
+				checks[i][j] = actChecks[i][j].isSelected();
 			}
-		});
+		}
 	}
 	
 	public boolean[][] getChecks() {
