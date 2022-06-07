@@ -65,6 +65,8 @@ public class Main {
 			System.out.println();
 		}
 		
+		generateActivitiesMap(checks, caps);
+		
 		Collections.sort(campers);
 
 //		printCamperPrefs();
@@ -145,46 +147,66 @@ public class Main {
 		}
 	}
 
+	public static void generateActivitiesMap(boolean[][] checks, Integer[][] caps) {
+		for (int i = 0; i < activitiesAlpha.size(); ++i) {
+			List<Integer> offs = new LinkedList<>();
+			for (int j = 0; j < 4; ++j) {
+				if (!checks[i][j]) {
+					offs.add(j + 1);
+				}
+			}
+			
+			List<Integer> capc = new LinkedList<>();
+			for (int j = 0; j < 4; ++j) {
+				if (caps[i][j] > 0) {
+					capc.add(caps[i][j]);
+				}
+			}
+			
+			activities.put(activitiesAlpha.get(i), new Activity(activitiesAlpha.get(i), offs, capc));
+		}
+//		activities.put("Adventure Challenge 1", new Activity("Adventure Challenge 1", Arrays.asList(1, 2), 12));
+//		activities.put("Adventure Challenge 2", new Activity("Adventure Challenge 2", null, 12));
+//		activities.put("Archery", new Activity("Archery", null, 12));
+//		activities.put("Camping Classics",
+//				new Activity("Camping Classics", Arrays.asList(3, 4), Arrays.asList(12, 16)));
+//		activities.put("Crafts", new Activity("Crafts", Arrays.asList(1, 2), 12));
+//		activities.put("FC Medley", new Activity("FC Medley", null, Arrays.asList(12, 16, 12, 12)));
+//		activities.put("Horsemanship - Beginner",
+//				new Activity("Horsemanship - Beginner", Arrays.asList(4), Arrays.asList(10, 9, 10)));
+//		activities.put("Horsemanship - Intermediate",
+//				new Activity("Horsemanship - Intermediate", Arrays.asList(4), Arrays.asList(6, 6, 10)));
+//		activities.put("Horsemanship - Advanced", new Activity("Horsemanship - Advanced", null, 8));
+//		activities.put("Kayaking", new Activity("Kayaking", null, 10));
+//		activities.put("Outdoorsmanship", new Activity("Outdoorsmanship", Arrays.asList(1, 3), 12));
+//		activities.put("Riflery", new Activity("Riflery", null, Arrays.asList(16, 12, 16, 12)));
+//		activities.put("Sports", new Activity("Sports", Arrays.asList(1, 3), 24));
+//		activities.put("Swimming", new Activity("Swimming", null, 10));
+//		activities.put("Wakeboarding", new Activity("Wakeboarding", null, 9));
+//		activities.put("Waterskiing", new Activity("Waterskiing", null, 6));
+//		activities.put("Wilderness Survival Skills",
+//				new Activity("Wilderness Survival Skills", null, Arrays.asList(12, 12, 16, 16)));
+//		activities.put("Woodworking", new Activity("Woodworking", null, Arrays.asList(16, 16, 8, 8)));
+	}
+	
 	public static void generateActivities() {
-		activities.put("Adventure Challenge 1", new Activity("Adventure Challenge 1", Arrays.asList(1, 2), 12));
 		activitiesAlpha.add("Adventure Challenge 1");
-		activities.put("Adventure Challenge 2", new Activity("Adventure Challenge 2", null, 12));
 		activitiesAlpha.add("Adventure Challenge 2");
-		activities.put("Archery", new Activity("Archery", null, 12));
 		activitiesAlpha.add("Archery");
-		activities.put("Camping Classics",
-				new Activity("Camping Classics", Arrays.asList(3, 4), Arrays.asList(12, 16)));
 		activitiesAlpha.add("Camping Classics");
-		activities.put("Crafts", new Activity("Crafts", Arrays.asList(1, 2), 12));
 		activitiesAlpha.add("Crafts");
-		activities.put("FC Medley", new Activity("FC Medley", null, Arrays.asList(12, 16, 12, 12)));
 		activitiesAlpha.add("FC Medley");
-		activities.put("Horsemanship - Beginner",
-				new Activity("Horsemanship - Beginner", Arrays.asList(4), Arrays.asList(10, 9, 10)));
 		activitiesAlpha.add("Horsemanship - Beginner");
-		activities.put("Horsemanship - Intermediate",
-				new Activity("Horsemanship - Intermediate", Arrays.asList(4), Arrays.asList(6, 6, 10)));
 		activitiesAlpha.add("Horsemanship - Intermediate");
-		activities.put("Horsemanship - Advanced", new Activity("Horsemanship - Advanced", null, 8));
 		activitiesAlpha.add("Horsemanship - Advanced");
-		activities.put("Kayaking", new Activity("Kayaking", null, 10));
 		activitiesAlpha.add("Kayaking");
-		activities.put("Outdoorsmanship", new Activity("Outdoorsmanship", Arrays.asList(1, 3), 12));
 		activitiesAlpha.add("Outdoorsmanship");
-		activities.put("Riflery", new Activity("Riflery", null, Arrays.asList(16, 12, 16, 12)));
 		activitiesAlpha.add("Riflery");
-		activities.put("Sports", new Activity("Sports", Arrays.asList(1, 3), 24));
 		activitiesAlpha.add("Sports");
-		activities.put("Swimming", new Activity("Swimming", null, 10));
 		activitiesAlpha.add("Swimming");
-		activities.put("Wakeboarding", new Activity("Wakeboarding", null, 9));
 		activitiesAlpha.add("Wakeboarding");
-		activities.put("Waterskiing", new Activity("Waterskiing", null, 6));
 		activitiesAlpha.add("Waterskiing");
-		activities.put("Wilderness Survival Skills",
-				new Activity("Wilderness Survival Skills", null, Arrays.asList(12, 12, 16, 16)));
 		activitiesAlpha.add("Wilderness Survival Skills");
-		activities.put("Woodworking", new Activity("Woodworking", null, Arrays.asList(16, 16, 8, 8)));
 		activitiesAlpha.add("Woodworking");
 	}
 
