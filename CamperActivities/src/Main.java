@@ -47,6 +47,7 @@ public class Main {
 		
 		GUI gui = new GUI(activitiesAlpha);
 		gui.chooseActivityPeriods();
+		gui.chooseActivityCapicities();
 		
 		boolean[][] checks = gui.getChecks();
 		for (int i = 0; i < checks.length; ++i) {
@@ -56,6 +57,14 @@ public class Main {
 			System.out.println();
 		}
 
+		Integer[][] caps = gui.getCaps();
+		for (int i = 0; i < caps.length; ++i) {
+			for (int j = 0; j < caps[0].length; ++j) {
+				System.out.print(caps[i][j] + "\t");
+			}
+			System.out.println();
+		}
+		
 		Collections.sort(campers);
 
 //		printCamperPrefs();

@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,13 +14,20 @@ public class GUI {
 	private List<String> activities;
 	private JCheckBox[][] actChecks;
 	private boolean[][] checks;
-	private J
+	private SpinnerNumberModel[][] capacities;
+	private Integer[][] caps;
 	private String[] periods = {"First Period", "Second Period", "Third Period", "Fourth Period"};
+	private Integer MIN = 0;
+	private Integer MAX = 20;
+	private Integer STEP = 1;
+	private Integer VAL = 0;
 	
 	public GUI(List<String> acts) {
 		activities = acts;
 		actChecks = new JCheckBox[activities.size()][4];
 		checks = new boolean[activities.size()][4];
+		capacities = new SpinnerNumberModel[activities.size()][4];
+		caps = new Integer[activities.size()][4];
 	}
 	
 	public void chooseActivityPeriods() {
@@ -59,6 +67,29 @@ public class GUI {
 		JPanel capacityPanel = new JPanel();
 		capacityPanel.setLayout(new GridLayout(0, 5));
 		
+		for (int i = 0; i < capacities.length; ++i) {
+			JLabel label = new JLabel(activities.get(i));
+			capacityPanel.add(label);
+			
+			for (int j = 0; j < capacities[0].length; ++j) {
+				capacities[i][j] = new SpinnerNumberModel(VAL, MIN, MAX, STEP);
+				JSpinner jsp = new JSpinner(capacities[i][j]);
+				capacityPanel.add(jsp);
+			}
+		}
 		
+		Object[] params = {"Input activity capacities", capacityPanel};
+		
+		JOptionPane.showMessageDialog(null, params);
+		
+		for (int i = 0; i < capacities.length; ++i) {
+			for (int j = 0; j < capacities[0].length; ++j) {
+				caps[i][j] = (Integer) capacities[i][j].getValue();
+			}
+		}
+	}
+	
+	public Integer[][] getCaps() {
+		return this.caps;
 	}
 }
