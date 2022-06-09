@@ -40,10 +40,9 @@ public class Main {
 		}
 
 		Scanner camperInfo = new Scanner(selectedFile);
-//		camperInfo.nextLine(); // Skip first line, it's titles
+		camperInfo.nextLine(); // Skip first line, it's titles
 
 		generateActivities();
-		mapCampersToPrefs(camperInfo);
 		
 		GUI gui = new GUI(activitiesAlpha);
 		gui.chooseActivityPeriods();
@@ -64,8 +63,10 @@ public class Main {
 			}
 			System.out.println();
 		}
-		
+
 		generateActivitiesMap(checks, caps);
+		
+		mapCampersToPrefs(camperInfo);
 		
 		Collections.sort(campers);
 
@@ -158,7 +159,7 @@ public class Main {
 			
 			List<Integer> capc = new LinkedList<>();
 			for (int j = 0; j < 4; ++j) {
-				if (caps[i][j] > 0) {
+				if (checks[i][j] &&  caps[i][j] > 0) {
 					capc.add(caps[i][j]);
 				}
 			}
