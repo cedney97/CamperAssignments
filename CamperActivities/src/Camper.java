@@ -23,6 +23,33 @@ public class Camper implements Comparable<Camper> {
 			this.schedule.add(null);
 		}
 	}
+	
+	public Camper(String firstName, String lastName, Date enrollDate) {
+		this.schedule = new ArrayList<>();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.enrollDate = enrollDate;
+		this.scheduleScore = 0;
+		this.hasPlaceholder = false;
+
+		for (int i = 0; i < 4; ++i) {
+			this.schedule.add(null);
+		}
+	}
+	
+	public Camper(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.schedule = new ArrayList<>();
+		this.enrollDate = null;
+		this.prefs = null;
+		this.scheduleScore = 0;
+		this.hasPlaceholder = false;
+		
+		for (int i = 0; i < 4; ++i) {
+			this.schedule.add(null);
+		}
+	}
 
 	public boolean getPlaceholder() {
 		return this.hasPlaceholder;

@@ -1,10 +1,5 @@
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.*;
@@ -21,6 +16,7 @@ public class GUI {
 	private Integer MAX = 30;
 	private Integer STEP = 1;
 	private Integer VAL = 12;
+	private boolean rosters;
 
 	public GUI(List<String> acts) {
 		activities = acts;
@@ -28,6 +24,26 @@ public class GUI {
 		checks = new boolean[activities.size()][4];
 		capacities = new SpinnerNumberModel[activities.size()][4];
 		caps = new Integer[activities.size()][4];
+		for (int i = 0; i < caps.length; ++i) {
+			for (int j = 0; j < caps[0].length; ++j) {
+				caps[i][j] = MAX;
+			}
+		}
+		rosters = true;
+		chooseAction();
+	}
+
+	public boolean getAction() {
+		return rosters;
+	}
+	
+	public void chooseAction() {
+		Object[] options = { "Assignments", "Rosters" };
+
+		int n = JOptionPane.showOptionDialog(null, "Would you like to assign campers or generate rosters?",
+				"Choose Program Usage", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
+				options[0]);
+		rosters = n == 1;
 	}
 
 	public void chooseActivityPeriods() {
@@ -69,9 +85,9 @@ public class GUI {
 		for (int i = 0; i < capacities.length; ++i) {
 			JLabel label = new JLabel(activities.get(i));
 			capacityPanel.add(label);
-			
+
 			VAL = getVal(activities.get(i));
-			
+
 			for (int j = 0; j < capacities[0].length; ++j) {
 				if (!checks[i][j]) {
 					JLabel empty = new JLabel(" ");
@@ -101,7 +117,7 @@ public class GUI {
 	public Integer[][] getCaps() {
 		return this.caps;
 	}
-	
+
 	public int getVal(String name) {
 		if (name.equals("Adventure Challenge 1")) {
 			return 12;

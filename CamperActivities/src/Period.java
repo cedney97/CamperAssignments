@@ -50,6 +50,10 @@ public class Period implements Comparable<Period>{
 		return false;
 	}
 	
+	public Camper[] getRoster() {
+		return this.roster;
+	}
+	
 	@Override
 	public int compareTo(Period p) {
 		if (this.getEnrolled() < p.getEnrolled()) {

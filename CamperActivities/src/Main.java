@@ -1,8 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -24,58 +24,106 @@ public class Main {
 	private static boolean alreadyHorse = false;
 	private static boolean alreadyAC = false;
 
-	public static void main(String[] args) throws FileNotFoundException {
-		fc.setName("Pick the camper report");
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
-		fc.setFileFilter(filter);
-		fc.setDialogTitle("Choose your camper report file");
-
-		int returnValue = fc.showOpenDialog(null);
-		File selectedFile = null;
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			selectedFile = fc.getSelectedFile();
-			System.out.println("Selected File: " + selectedFile.getName() + "\n");
-		} else {
-			System.exit(1);
-		}
-
-		Scanner camperInfo = new Scanner(selectedFile);
-		camperInfo.nextLine(); // Skip first line, it's titles
-
+	public static void main(String[] args) throws FileNotFoundException, MalformedURLException {
 		generateActivities();
-		
+
 		GUI gui = new GUI(activitiesAlpha);
-		gui.chooseActivityPeriods();
-		gui.chooseActivityCapicities();
 		
-		boolean[][] checks = gui.getChecks();
-		for (int i = 0; i < checks.length; ++i) {
-			for (int j = 0; j < checks[0].length; ++j) {
-				System.out.print(checks[i][j] + "\t");
+		if (!gui.getAction()) {
+
+			fc.setName("Pick the camper report");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
+			fc.setFileFilter(filter);
+			fc.setDialogTitle("Choose your camper report file");
+
+			int returnValue = fc.showOpenDialog(null);
+			File selectedFile = null;
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				selectedFile = fc.getSelectedFile();
+				System.out.println("Selected File: " + selectedFile.getName() + "\n");
+			} else {
+				System.exit(1);
 			}
-			System.out.println();
-		}
 
-		Integer[][] caps = gui.getCaps();
-		for (int i = 0; i < caps.length; ++i) {
-			for (int j = 0; j < caps[0].length; ++j) {
-				System.out.print(caps[i][j] + "\t");
+			Scanner camperInfo = new Scanner(selectedFile);
+			camperInfo.nextLine(); // Skip first line, it's titles
+
+
+			gui.chooseActivityPeriods();
+			gui.chooseActivityCapicities();
+
+			boolean[][] checks = gui.getChecks();
+
+			Integer[][] caps = gui.getCaps();
+
+			generateActivitiesMap(checks, caps);
+
+			mapCampersToPrefs(camperInfo);
+
+			Collections.sort(campers);
+
+			assignCampers();
+			generateCSV();
+			camperInfo.close();
+		} else {
+			fc.setName("Pick the Activity Assignments");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
+			fc.setFileFilter(filter);
+			fc.setDialogTitle("Choose your Assignment file");
+
+			int returnValue = fc.showOpenDialog(null);
+			File selectedFile = null;
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				selectedFile = fc.getSelectedFile();
+				System.out.println("Selected File: " + selectedFile.getName() + "\n");
+			} else {
+				System.exit(1);
 			}
-			System.out.println();
+
+			generateFullMaxActivities();
+
+			Scanner camperInfo = new Scanner(selectedFile);
+			camperInfo.nextLine(); // Skip first line, it's titles
+			camperInfo.nextLine(); // There's also one extra line (I put it there haha)
+			getCamperSchedules(camperInfo);
+
+			for (String s : activitiesAlpha) {
+				DocumentCreator.createRoster(activities.get(s));
+			}
 		}
+	}
 
-		generateActivitiesMap(checks, caps);
-		
-		mapCampersToPrefs(camperInfo);
-		
-		Collections.sort(campers);
+	public static void getCamperSchedules(Scanner camperInfo) {
+		while (camperInfo.hasNextLine()) {
+			String line = camperInfo.nextLine();
+			Scanner lineScanner = new Scanner(line);
 
-//		printCamperPrefs();
+			lineScanner.useDelimiter(",");
 
-		assignCampers();
-//		printCamperSchedules();
-		generateCSV();
-		camperInfo.close();
+			String lastName = lineScanner.next();
+			String firstName = lineScanner.next();
+
+			Camper c = new Camper(firstName, lastName);
+
+			for (int i = 0; i < 4; ++i) {
+				String activity = lineScanner.next();
+				Activity a = activities.get(activity);
+				Period p = a.getPeriod(i);
+				c.enrollCamper(p);
+			}
+
+			c.setScore(Integer.parseInt(lineScanner.next()));
+			
+			campers.add(c);
+			lineScanner.close();
+		}
+	}
+
+	public static void generateFullMaxActivities() {
+
+		for (String s : activitiesAlpha) {
+			activities.put(s, new Activity(s, null, 30));
+		}
 	}
 
 	public static void printCamperSchedules() {
@@ -94,6 +142,7 @@ public class Main {
 
 	public static void assignCampers() {
 		for (Camper c : campers) {
+			System.out.println(c.getName());
 			alreadyWakeSki = false;
 			alreadyHorse = false;
 			alreadyAC = false;
@@ -156,14 +205,14 @@ public class Main {
 					offs.add(j + 1);
 				}
 			}
-			
+
 			List<Integer> capc = new LinkedList<>();
 			for (int j = 0; j < 4; ++j) {
-				if (checks[i][j] &&  caps[i][j] > 0) {
+				if (checks[i][j] && caps[i][j] > 0) {
 					capc.add(caps[i][j]);
 				}
 			}
-			
+
 			activities.put(activitiesAlpha.get(i), new Activity(activitiesAlpha.get(i), offs, capc));
 		}
 //		activities.put("Adventure Challenge 1", new Activity("Adventure Challenge 1", Arrays.asList(1, 2), 12));
@@ -189,7 +238,7 @@ public class Main {
 //				new Activity("Wilderness Survival Skills", null, Arrays.asList(12, 12, 16, 16)));
 //		activities.put("Woodworking", new Activity("Woodworking", null, Arrays.asList(16, 16, 8, 8)));
 	}
-	
+
 	public static void generateActivities() {
 		activitiesAlpha.add("Adventure Challenge 1");
 		activitiesAlpha.add("Adventure Challenge 2");
@@ -237,8 +286,7 @@ public class Main {
 			// Once received, create Camper out of that data
 			String lastName = lineScanner.next();
 			String firstName = lineScanner.next();
-			String lakePermission = lineScanner.next();
-			Camper c = new Camper(firstName, lastName, lakePermission.equals("Yes"), enrollDate);
+			Camper c = new Camper(firstName, lastName, enrollDate);
 
 			// Create empty list of preferences for the Camper
 			LinkedList<Activity> prefs = new LinkedList<>();
