@@ -28,7 +28,7 @@ public class Main {
 		generateActivities();
 
 		GUI gui = new GUI(activitiesAlpha);
-		
+
 		if (!gui.getAction()) {
 
 			fc.setName("Pick the camper report");
@@ -47,7 +47,6 @@ public class Main {
 
 			Scanner camperInfo = new Scanner(selectedFile);
 			camperInfo.nextLine(); // Skip first line, it's titles
-
 
 			gui.chooseActivityPeriods();
 			gui.chooseActivityCapicities();
@@ -88,7 +87,7 @@ public class Main {
 			getCamperSchedules(camperInfo);
 
 			for (String s : activitiesAlpha) {
-				DocumentCreator.createRoster(activities.get(s));
+				DocumentCreator.createRoster(activities.get(s), gui.getWeek());
 			}
 		}
 	}
@@ -113,7 +112,7 @@ public class Main {
 			}
 
 			c.setScore(Integer.parseInt(lineScanner.next()));
-			
+
 			campers.add(c);
 			lineScanner.close();
 		}
@@ -142,7 +141,7 @@ public class Main {
 
 	public static void assignCampers() {
 		for (Camper c : campers) {
-			System.out.println(c.getName());
+//			System.out.println(c.getName());
 			alreadyWakeSki = false;
 			alreadyHorse = false;
 			alreadyAC = false;
@@ -193,7 +192,6 @@ public class Main {
 			}
 
 			c.addSchedule(sched);
-//			System.out.println(c.getName() + " Done");
 		}
 	}
 
@@ -215,28 +213,6 @@ public class Main {
 
 			activities.put(activitiesAlpha.get(i), new Activity(activitiesAlpha.get(i), offs, capc));
 		}
-//		activities.put("Adventure Challenge 1", new Activity("Adventure Challenge 1", Arrays.asList(1, 2), 12));
-//		activities.put("Adventure Challenge 2", new Activity("Adventure Challenge 2", null, 12));
-//		activities.put("Archery", new Activity("Archery", null, 12));
-//		activities.put("Camping Classics",
-//				new Activity("Camping Classics", Arrays.asList(3, 4), Arrays.asList(12, 16)));
-//		activities.put("Crafts", new Activity("Crafts", Arrays.asList(1, 2), 12));
-//		activities.put("FC Medley", new Activity("FC Medley", null, Arrays.asList(12, 16, 12, 12)));
-//		activities.put("Horsemanship - Beginner",
-//				new Activity("Horsemanship - Beginner", Arrays.asList(4), Arrays.asList(10, 9, 10)));
-//		activities.put("Horsemanship - Intermediate",
-//				new Activity("Horsemanship - Intermediate", Arrays.asList(4), Arrays.asList(6, 6, 10)));
-//		activities.put("Horsemanship - Advanced", new Activity("Horsemanship - Advanced", null, 8));
-//		activities.put("Kayaking", new Activity("Kayaking", null, 10));
-//		activities.put("Outdoorsmanship", new Activity("Outdoorsmanship", Arrays.asList(1, 3), 12));
-//		activities.put("Riflery", new Activity("Riflery", null, Arrays.asList(16, 12, 16, 12)));
-//		activities.put("Sports", new Activity("Sports", Arrays.asList(1, 3), 24));
-//		activities.put("Swimming", new Activity("Swimming", null, 10));
-//		activities.put("Wakeboarding", new Activity("Wakeboarding", null, 9));
-//		activities.put("Waterskiing", new Activity("Waterskiing", null, 6));
-//		activities.put("Wilderness Survival Skills",
-//				new Activity("Wilderness Survival Skills", null, Arrays.asList(12, 12, 16, 16)));
-//		activities.put("Woodworking", new Activity("Woodworking", null, Arrays.asList(16, 16, 8, 8)));
 	}
 
 	public static void generateActivities() {
@@ -352,11 +328,14 @@ public class Main {
 	public static void enrollCamper(Camper c, PriorityCounter pc) {
 		if (checkWakeSki(pc.getActivity().getName()) || checkHorse(pc.getActivity().getName())) {
 
-			if (pc.getActivity().getName().equals("Adventure Challenge 2") && alreadyAC) {
-				return;
+			if (pc.getActivity().getName().equals("Adventure Challenge 2")
+					|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
+				if (alreadyAC) {
+					return;
+				}
 			}
 
-			if (pc.getActivity().getName().equals("Adventure Challenge 1")) {
+			if (pc.getActivity().getName().equals("Adventure Challenge 1") && !alreadyAC) {
 				if (c.getPrefs().contains(activities.get("Adventure Challenge 2"))) {
 					pc = new PriorityCounter(activities.get("Adventure Challenge 2"), pc.getScore());
 				}
@@ -375,6 +354,19 @@ public class Main {
 				c.addScore(pc.getScore());
 			}
 		} else {
+			if (pc.getActivity().getName().equals("Adventure Challenge 2")
+					|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
+				if (alreadyAC) {
+					return;
+				}
+			}
+
+			if (pc.getActivity().getName().equals("Adventure Challenge 1") && !alreadyAC) {
+				if (c.getPrefs().contains(activities.get("Adventure Challenge 2"))) {
+					pc = new PriorityCounter(activities.get("Adventure Challenge 2"), pc.getScore());
+				}
+			}
+
 			ArrayList<Period> avails = pc.getActivity().getPeriodsLowToHighEnroll();
 
 			int i = 0;

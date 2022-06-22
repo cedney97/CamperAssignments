@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.List;
 
@@ -17,7 +16,8 @@ public class GUI {
 	private Integer STEP = 1;
 	private Integer VAL = 12;
 	private boolean rosters;
-
+	private int week;
+	
 	public GUI(List<String> acts) {
 		activities = acts;
 		actChecks = new JCheckBox[activities.size()][4];
@@ -31,10 +31,20 @@ public class GUI {
 		}
 		rosters = true;
 		chooseAction();
+		chooseWeek();
 	}
 
 	public boolean getAction() {
 		return rosters;
+	}
+
+	
+	public void	chooseWeek() {
+		JSpinner jsp = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+		Object[] params = {"What week is it?", jsp};
+		JOptionPane.showMessageDialog(null, params);
+		
+		week = (int) jsp.getValue();
 	}
 	
 	public void chooseAction() {
@@ -174,5 +184,9 @@ public class GUI {
 			return 12;
 		}
 		return 0;
+	}
+
+	public int getWeek() {
+		return week;
 	}
 }

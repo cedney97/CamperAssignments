@@ -7,7 +7,6 @@ public class Period implements Comparable<Period>{
 	private int order;
 	
 	public Period (String name, int capacity, int enrolled, int order) {
-		this.name = name;
 		this.capacity = capacity;
 		this.enrolled = enrolled;
 		roster = new Camper[capacity];
@@ -57,10 +56,10 @@ public class Period implements Comparable<Period>{
 	@Override
 	public int compareTo(Period p) {
 		if (this.getEnrolled() < p.getEnrolled()) {
-			return 1;
+			return -1;
 		}
 		if (this.getEnrolled() > p.getEnrolled()) {
-			return -1;
+			return 1;
 		}
 		return 0;
 	}

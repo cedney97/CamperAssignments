@@ -11,7 +11,7 @@ public class Activity {
 		this.periods = new Period[4];
 		
 		for (int i = 0; i < periods.length; ++i) {
-			periods[i] = new Period(name + " " + (i + 1), individualCapacity, 0, i + 1);
+			periods[i] = new Period(name, individualCapacity, 0, i + 1);
 		}
 
 		if (offPeriods != null) {
@@ -29,11 +29,11 @@ public class Activity {
 		for (int i = 0; i < periods.length; ++i) {
 			if (offPeriods != null) {
 				if (!offPeriods.contains(i + 1)) {
-					periods[i] = new Period(name + " " + (i + 1), capacities.get(capCounter), 0, i + 1);
+					periods[i] = new Period(name, capacities.get(capCounter), 0, i + 1);
 					++capCounter;
 				}
 			} else {
-				periods[i] = new Period(name + " " + (i + 1), capacities.get(capCounter), 0, i + 1);
+				periods[i] = new Period(name, capacities.get(capCounter), 0, i + 1);
 				++capCounter;
 			}
 		}
