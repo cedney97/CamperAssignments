@@ -64,7 +64,7 @@ public class DocumentCreator {
 
 				Paragraph pLogo = new Paragraph();
 				pLogo.setMultipliedLeading(.5f);
-				Image logo = new Image(ImageDataFactory.create("src/photos/FrontierCampLogo.png"));
+				Image logo = new Image(ImageDataFactory.create(Main.class.getResource("/photos/FrontierCampLogo.png")));
 				logo.setHeight(logo.getImageHeight() * .5f);
 				logo.setWidth(logo.getImageWidth() * .5f);
 				pLogo.add(logo);

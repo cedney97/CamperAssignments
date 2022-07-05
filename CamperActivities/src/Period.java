@@ -7,6 +7,7 @@ public class Period implements Comparable<Period>{
 	private int order;
 	
 	public Period (String name, int capacity, int enrolled, int order) {
+		this.name = name;
 		this.capacity = capacity;
 		this.enrolled = enrolled;
 		roster = new Camper[capacity];

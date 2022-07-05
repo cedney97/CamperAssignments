@@ -145,53 +145,65 @@ public class Main {
 			alreadyWakeSki = false;
 			alreadyHorse = false;
 			alreadyAC = false;
-			LinkedList<Activity> prefs = c.getPrefs();
-			ArrayList<PriorityCounter> prefsWithPriority = new ArrayList<PriorityCounter>();
-			int priority = 6;
-			for (Activity a : prefs) {
-				prefsWithPriority.add(new PriorityCounter(a, priority));
-				--priority;
-			}
+			if (c.hasPrefs()) {
+				LinkedList<Activity> prefs = c.getPrefs();
+				ArrayList<PriorityCounter> prefsWithPriority = new ArrayList<PriorityCounter>();
+				int priority = 6;
+				for (Activity a : prefs) {
+					prefsWithPriority.add(new PriorityCounter(a, priority));
+					--priority;
+				}
 
-			PriorityCounter[] firstFour = { prefsWithPriority.get(0), prefsWithPriority.get(1),
-					prefsWithPriority.get(2), prefsWithPriority.get(3) };
+				PriorityCounter[] firstFour = { prefsWithPriority.get(0), prefsWithPriority.get(1),
+						prefsWithPriority.get(2), prefsWithPriority.get(3) };
 
-			// Sort prefs by number of periods
-			bubbleSort(firstFour);
+				// Sort prefs by number of periods
+				bubbleSort(firstFour);
 
-			// Go through each activity
-			for (PriorityCounter pc : firstFour) {
-				enrollCamper(c, pc);
-			}
+				// Go through each activity
+				for (PriorityCounter pc : firstFour) {
+					enrollCamper(c, pc);
+				}
 
-			if (hasNulls(c.getSchedule())) {
-				PriorityCounter fifth = prefsWithPriority.get(4);
-				PriorityCounter sixth = prefsWithPriority.get(5);
+				if (hasNulls(c.getSchedule())) {
+					PriorityCounter fifth = prefsWithPriority.get(4);
+					PriorityCounter sixth = prefsWithPriority.get(5);
 
-				if (fifth.getActivity().getTotalPeriods() > sixth.getActivity().getTotalPeriods()) {
-					enrollCamper(c, fifth);
-					if (hasNulls(c.getSchedule())) {
-						enrollCamper(c, sixth);
-					}
-				} else {
-					enrollCamper(c, sixth);
-					if (hasNulls(c.getSchedule())) {
+					if (fifth.getActivity().getTotalPeriods() > sixth.getActivity().getTotalPeriods()) {
 						enrollCamper(c, fifth);
+						if (hasNulls(c.getSchedule())) {
+							enrollCamper(c, sixth);
+						}
+					} else {
+						enrollCamper(c, sixth);
+						if (hasNulls(c.getSchedule())) {
+							enrollCamper(c, fifth);
+						}
+					}
+				}
+
+				ArrayList<Period> sched = c.getSchedule();
+				for (int i = 0; i < sched.size(); ++i) {
+					Period p = sched.get(i);
+					if (p == null) {
+						c.setPlaceholder(true);
+						sched.remove(i);
+						sched.add(i, PLACEHOLDER);
+					}
+				}
+
+				c.addSchedule(sched);
+			} else {
+				ArrayList<Period> sched = c.getSchedule();
+				for (int i = 0; i < sched.size(); ++i) {
+					Period p = sched.get(i);
+					if (p == null) {
+						c.setPlaceholder(true);
+						sched.remove(i);
+						sched.add(i, PLACEHOLDER);
 					}
 				}
 			}
-
-			ArrayList<Period> sched = c.getSchedule();
-			for (int i = 0; i < sched.size(); ++i) {
-				Period p = sched.get(i);
-				if (p == null) {
-					c.setPlaceholder(true);
-					sched.remove(i);
-					sched.add(i, PLACEHOLDER);
-				}
-			}
-
-			c.addSchedule(sched);
 		}
 	}
 
@@ -264,26 +276,32 @@ public class Main {
 			String firstName = lineScanner.next();
 			Camper c = new Camper(firstName, lastName, enrollDate);
 
+//			System.out.println(firstName + " " + lastName);
+
 			// Create empty list of preferences for the Camper
 			LinkedList<Activity> prefs = new LinkedList<>();
 
 			// Get preferences String from .csv, put into Scanner, and use either ", " or
 			// "and " as delimiter
 			String prefRaw = lineScanner.nextLine();
-			prefRaw = prefRaw.substring(2, prefRaw.length() - 1);
-			Scanner scPref = new Scanner(prefRaw);
-			scPref.useDelimiter(", | and ");
+			if (prefRaw.length() > 1) {
+				prefRaw = prefRaw.substring(2, prefRaw.length() - 1);
+				Scanner scPref = new Scanner(prefRaw);
+				scPref.useDelimiter(", | and ");
 
-			// Separate each preference and put into list
-			while (scPref.hasNext()) {
-				prefs.add(activities.get(scPref.next()));
+				// Separate each preference and put into list
+				while (scPref.hasNext()) {
+					prefs.add(activities.get(scPref.next()));
+				}
+				scPref.close();
+			} else {
+				prefs = null;
 			}
 
 			// Add Camper and preferences to list and map, close Scanners
 			c.addPrefs(prefs);
 			campers.add(c);
 			lineScanner.close();
-			scPref.close();
 			scDate.close();
 		}
 	}
@@ -292,14 +310,18 @@ public class Main {
 		for (Camper c : campers) {
 			System.out.println(c.getName() + "'s Preferences (Enroll Date = " + c.getEnrollDate() + "):");
 			LinkedList<Activity> prefs = c.getPrefs();
-			Activity head = prefs.getFirst();
-			for (Activity a : prefs) {
-				if (!a.equals(head)) {
-					System.out.print(", ");
+			if (prefs != null) {
+				Activity head = prefs.getFirst();
+				for (Activity a : prefs) {
+					if (!a.equals(head)) {
+						System.out.print(", ");
+					}
+					System.out.print(a.getName());
 				}
-				System.out.print(a.getName());
+				System.out.println("\n--------------");
+			} else {
+				System.out.println("No Prefs");
 			}
-			System.out.println("\n--------------");
 		}
 	}
 
@@ -435,11 +457,7 @@ public class Main {
 				sb.append(c.getFirstName());
 				sb.append(",");
 				for (Period p : c.getSchedule()) {
-					if (p.equals(PLACEHOLDER)) {
-						sb.append(p.getName());
-					} else {
-						sb.append(p.getName().substring(0, p.getName().length() - 2));
-					}
+					sb.append(p.getName());
 					sb.append(",");
 				}
 				sb.append(c.getScore());
