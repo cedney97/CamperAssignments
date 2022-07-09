@@ -136,7 +136,12 @@ public class Camper implements Comparable<Camper> {
 		if (compare != 0) {
 			return compare;
 		} else {
-			return this.getLastName().compareTo(c.getLastName());
+			int compare2 = this.getLastName().compareTo(c.getLastName());
+			if (compare2 != 0) {
+				return compare2;
+			} else {
+				return this.getFirstName().compareTo(c.getFirstName());
+			}
 		}
 	}
 

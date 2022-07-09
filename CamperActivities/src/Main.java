@@ -109,6 +109,8 @@ public class Main {
 
 			Date enroll = new Date(scDate.nextInt(), scDate.nextInt(), scDate.nextInt());
 			
+			scDate.close();
+			
 			Camper c = new Camper(firstName, lastName, enroll);
 
 			for (int i = 0; i < 4; ++i) {
