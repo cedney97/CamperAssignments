@@ -23,6 +23,7 @@ public class Main {
 	private static boolean alreadyWakeSki = false;
 	private static boolean alreadyHorse = false;
 	private static boolean alreadyAC = false;
+	private static boolean debug = false;
 
 	public static void main(String[] args) throws FileNotFoundException, MalformedURLException {
 		generateActivities();
@@ -99,10 +100,16 @@ public class Main {
 
 			lineScanner.useDelimiter(",");
 
+			String enrollDate = lineScanner.next();
 			String lastName = lineScanner.next();
 			String firstName = lineScanner.next();
 
-			Camper c = new Camper(firstName, lastName);
+			Scanner scDate = new Scanner(enrollDate);
+			scDate.useDelimiter("/");
+
+			Date enroll = new Date(scDate.nextInt(), scDate.nextInt(), scDate.nextInt());
+			
+			Camper c = new Camper(firstName, lastName, enroll);
 
 			for (int i = 0; i < 4; ++i) {
 				String activity = lineScanner.next();
@@ -348,59 +355,42 @@ public class Main {
 	}
 
 	public static void enrollCamper(Camper c, PriorityCounter pc) {
-		if (checkWakeSki(pc.getActivity().getName()) || checkHorse(pc.getActivity().getName())) {
 
-			if (pc.getActivity().getName().equals("Adventure Challenge 2")
-					|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
-				if (alreadyAC) {
-					return;
-				}
+		if (pc.getActivity().getName().equals("Adventure Challenge 2")
+				|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
+			if (alreadyAC) {
+				return;
 			}
-
-			if (pc.getActivity().getName().equals("Adventure Challenge 1") && !alreadyAC) {
+			if (pc.getActivity().getName().equals("Adventure Challenge 1")) {
 				if (c.getPrefs().contains(activities.get("Adventure Challenge 2"))) {
 					pc = new PriorityCounter(activities.get("Adventure Challenge 2"), pc.getScore());
 				}
 			}
+		}
 
-			ArrayList<Period> avails = pc.getActivity().getPeriodsLowToHighEnroll();
-
-			boolean enrolled = false;
-			for (Period p : avails) {
-				enrolled = c.enrollCamper(p);
-				if (enrolled) {
-					break;
-				}
+		if (pc.getActivity().getName().equals("Wakeboarding") || pc.getActivity().getName().equals("Waterskiing")) {
+			if (alreadyWakeSki) {
+				return;
 			}
+		}
+		
+		if (pc.getActivity().getName().equals("Horsemanship - Beginner") || pc.getActivity().getName().equals("Horsemanship - Intermediate") || pc.getActivity().getName().equals("Horsemanship - Advanced")) {
+			if (alreadyHorse) {
+				return;
+			}
+		}
+		
+		ArrayList<Period> avails = pc.getActivity().getPeriodsLowToHighEnroll();
+
+		boolean enrolled = false;
+		for (Period p : avails) {
+			enrolled = c.enrollCamper(p);
 			if (enrolled) {
-				c.addScore(pc.getScore());
+				break;
 			}
-		} else {
-			if (pc.getActivity().getName().equals("Adventure Challenge 2")
-					|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
-				if (alreadyAC) {
-					return;
-				}
-			}
-
-			if (pc.getActivity().getName().equals("Adventure Challenge 1") && !alreadyAC) {
-				if (c.getPrefs().contains(activities.get("Adventure Challenge 2"))) {
-					pc = new PriorityCounter(activities.get("Adventure Challenge 2"), pc.getScore());
-				}
-			}
-
-			ArrayList<Period> avails = pc.getActivity().getPeriodsLowToHighEnroll();
-
-			int i = 0;
-			boolean enrolled = false;
-			while (!enrolled && i < avails.size()) {
-				Period p = avails.get(i);
-				enrolled = c.enrollCamper(p);
-				++i;
-			}
-			if (enrolled) {
-				c.addScore(pc.getScore());
-			}
+		}
+		if (enrolled) {
+			c.addScore(pc.getScore());
 		}
 
 		if (checkWakeSki(pc.getActivity().getName())) {
@@ -432,6 +422,8 @@ public class Main {
 	public static void generateCSV() throws FileNotFoundException {
 		try (PrintWriter writer = new PrintWriter("camperAssignments.csv")) {
 			StringBuilder sb = new StringBuilder();
+			sb.append("Enroll Date");
+			sb.append(",");
 			sb.append("Last Name");
 			sb.append(",");
 			sb.append("First Name");
@@ -449,9 +441,22 @@ public class Main {
 			sb.append("Quality Score as %");
 			sb.append(",");
 			sb.append("Has Empty Activity?");
+			
+			if (debug) {
+				sb.append(",");
+				sb.append("Has Wake & Ski");
+				sb.append(",");
+				sb.append("Has AC1 & 2");
+				sb.append(",");
+				sb.append("Has Many Horses");
+				sb.append("");
+			}
+			
 			sb.append("\n\n");
 
 			for (Camper c : campers) {
+				sb.append(c.getEnrollDate().toString());
+				sb.append(",");
 				sb.append(c.getLastName());
 				sb.append(",");
 				sb.append(c.getFirstName());
@@ -465,6 +470,36 @@ public class Main {
 				sb.append(Math.round(c.getScore() / 18.0 * 10000) / 100.0 + "%");
 				sb.append(",");
 				sb.append(c.getPlaceholder() ? "Yes" : " ");
+				
+				if (debug) {
+					int waterCount = 0;
+					int acCount = 0;
+					int horseCount = 0;
+					for (Period p : c.getSchedule()) {
+						String name = p.getName();
+						
+						if (name.equals("Wakeboarding") || name.equals("Waterskiing")) {
+							waterCount++;
+						}
+						
+						if (name.equals("Adventure Challenge 1") || name.equals("Adventure Challenge 2")) {
+							acCount++;
+						}
+						
+						if (name.equals("Horsemanship - Beginner") || name.equals("Horsemanship - Intermediate") || name.equals("Horsemanship - Advanced")) {
+							horseCount++;
+						}
+					}
+					
+					sb.append(",");
+					sb.append(waterCount > 1 ? "Yes" : " ");
+					sb.append(",");
+					sb.append(acCount > 1 ? "Yes" : " ");
+					sb.append(",");
+					sb.append(horseCount > 1 ? "Yes" : " ");
+					
+				}
+				
 				sb.append("\n");
 			}
 

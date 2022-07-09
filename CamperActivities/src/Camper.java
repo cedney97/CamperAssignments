@@ -132,7 +132,12 @@ public class Camper implements Comparable<Camper> {
 
 	@Override
 	public int compareTo(Camper c) {
-		return this.enrollDate.compareTo(c.getEnrollDate());
+		int compare = this.enrollDate.compareTo(c.getEnrollDate());
+		if (compare != 0) {
+			return compare;
+		} else {
+			return this.getLastName().compareTo(c.getLastName());
+		}
 	}
 
 	@Override
