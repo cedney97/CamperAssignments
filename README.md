@@ -9,4 +9,4 @@ The specific outline of the algorithm is catered toward Frontier Camp's overall 
 - Go through each camper and map them to their 6 preferences,
 - Then, for each camper, assign a priority score to each of the preferences, the first preference being 6, the second being 5, and so forth,
 - The program will then look through the first 4 preferences, with the priority of being assigned to classes with less activity periods.
-- - For each of these
+  - For each of these
