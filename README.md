@@ -8,5 +8,7 @@ This program will not do both at once, however, so that the user can have the ab
 The specific outline of the algorithm is catered toward Frontier Camp's overall activity period setup and is detailed below:
 - Go through each camper and map them to their 6 preferences,
 - Then, for each camper, assign a priority score to each of the preferences, the first preference being 6, the second being 5, and so forth,
-- The program will then look through the first 4 preferences, with the priority of being assigned to classes with less activity periods.
-  - For each of these
+- The program will then look through the first 4 activity preferences, with the priority of being assigned to classes with less periods.
+- For each of these activities, the program will check a few things
+  - If the activity is Adventure Challenge 1 or Adventure Challenge 2:
+    - jkjk
