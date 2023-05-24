@@ -108,9 +108,9 @@ public class Main {
 			scDate.useDelimiter("/");
 
 			Date enroll = new Date(scDate.nextInt(), scDate.nextInt(), scDate.nextInt());
-			
+
 			scDate.close();
-			
+
 			Camper c = new Camper(firstName, lastName, enroll);
 
 			for (int i = 0; i < 4; ++i) {
@@ -150,7 +150,7 @@ public class Main {
 
 	public static void assignCampers() {
 		for (Camper c : campers) {
-//			System.out.println(c.getName());
+			// System.out.println(c.getName());
 			alreadyWakeSki = false;
 			alreadyHorse = false;
 			alreadyAC = false;
@@ -285,7 +285,7 @@ public class Main {
 			String firstName = lineScanner.next();
 			Camper c = new Camper(firstName, lastName, enrollDate);
 
-//			System.out.println(firstName + " " + lastName);
+			// System.out.println(firstName + " " + lastName);
 
 			// Create empty list of preferences for the Camper
 			LinkedList<Activity> prefs = new LinkedList<>();
@@ -294,8 +294,14 @@ public class Main {
 			// "and " as delimiter
 			String prefRaw = lineScanner.nextLine();
 			if (prefRaw.length() > 1) {
-				prefRaw = prefRaw.substring(2, prefRaw.length() - 1);
+
 				Scanner scPref = new Scanner(prefRaw);
+				scPref.useDelimiter(",");
+				String lakePermission = scPref.next();
+				String rest = scPref.nextLine();
+				rest = rest.substring(2, rest.length() - 1);
+				scPref.close();
+				scPref = new Scanner(rest);
 				scPref.useDelimiter(", | and ");
 
 				// Separate each preference and put into list
@@ -375,13 +381,15 @@ public class Main {
 				return;
 			}
 		}
-		
-		if (pc.getActivity().getName().equals("Horsemanship - Beginner") || pc.getActivity().getName().equals("Horsemanship - Intermediate") || pc.getActivity().getName().equals("Horsemanship - Advanced")) {
+
+		if (pc.getActivity().getName().equals("Horsemanship - Beginner")
+				|| pc.getActivity().getName().equals("Horsemanship - Intermediate")
+				|| pc.getActivity().getName().equals("Horsemanship - Advanced")) {
 			if (alreadyHorse) {
 				return;
 			}
 		}
-		
+
 		ArrayList<Period> avails = pc.getActivity().getPeriodsLowToHighEnroll();
 
 		boolean enrolled = false;
@@ -443,7 +451,7 @@ public class Main {
 			sb.append("Quality Score as %");
 			sb.append(",");
 			sb.append("Has Empty Activity?");
-			
+
 			if (debug) {
 				sb.append(",");
 				sb.append("Has Wake & Ski");
@@ -453,7 +461,7 @@ public class Main {
 				sb.append("Has Many Horses");
 				sb.append("");
 			}
-			
+
 			sb.append("\n\n");
 
 			for (Camper c : campers) {
@@ -472,36 +480,37 @@ public class Main {
 				sb.append(Math.round(c.getScore() / 18.0 * 10000) / 100.0 + "%");
 				sb.append(",");
 				sb.append(c.getPlaceholder() ? "Yes" : " ");
-				
+
 				if (debug) {
 					int waterCount = 0;
 					int acCount = 0;
 					int horseCount = 0;
 					for (Period p : c.getSchedule()) {
 						String name = p.getName();
-						
+
 						if (name.equals("Wakeboarding") || name.equals("Waterskiing")) {
 							waterCount++;
 						}
-						
+
 						if (name.equals("Adventure Challenge 1") || name.equals("Adventure Challenge 2")) {
 							acCount++;
 						}
-						
-						if (name.equals("Horsemanship - Beginner") || name.equals("Horsemanship - Intermediate") || name.equals("Horsemanship - Advanced")) {
+
+						if (name.equals("Horsemanship - Beginner") || name.equals("Horsemanship - Intermediate")
+								|| name.equals("Horsemanship - Advanced")) {
 							horseCount++;
 						}
 					}
-					
+
 					sb.append(",");
 					sb.append(waterCount > 1 ? "Yes" : " ");
 					sb.append(",");
 					sb.append(acCount > 1 ? "Yes" : " ");
 					sb.append(",");
 					sb.append(horseCount > 1 ? "Yes" : " ");
-					
+
 				}
-				
+
 				sb.append("\n");
 			}
 
