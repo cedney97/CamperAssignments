@@ -36,6 +36,7 @@ public class Main {
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV Files", "csv");
 			fc.setFileFilter(filter);
 			fc.setDialogTitle("Choose your camper report file");
+			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 			int returnValue = fc.showOpenDialog(null);
 			File selectedFile = null;
@@ -97,7 +98,9 @@ public class Main {
 		while (camperInfo.hasNextLine()) {
 			String line = camperInfo.nextLine();
 			Scanner lineScanner = new Scanner(line);
-
+			if (line.equals(",,,,,,,,,")) {
+				continue;
+			}
 			lineScanner.useDelimiter(",");
 
 			String enrollDate = lineScanner.next();
@@ -297,7 +300,7 @@ public class Main {
 
 				Scanner scPref = new Scanner(prefRaw);
 				scPref.useDelimiter(",");
-				String lakePermission = scPref.next();
+				scPref.next(); // Skips lake permission
 				String rest = scPref.nextLine();
 				rest = rest.substring(2, rest.length() - 1);
 				scPref.close();

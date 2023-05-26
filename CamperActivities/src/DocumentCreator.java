@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.net.URL;
+// import java.nio.file.Path;
 
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -17,33 +19,34 @@ import com.itextpdf.layout.properties.UnitValue;
 
 public class DocumentCreator {
 	public static void main(String[] args) throws FileNotFoundException, MalformedURLException {
-//		File file = new File("ActivityRoster.pdf");
-//		PdfWriter pdfw = new PdfWriter(file);
-//		PdfDocument pdfDoc = new PdfDocument(pdfw);
-//		pdfDoc.addNewPage();
-//		Document doc = new Document(pdfDoc);
-//		PdfDocumentInfo info = pdfDoc.getDocumentInfo();
-//		info.setTitle("Testing Document Creation");
-//		Image logo = new Image(ImageDataFactory.create("src/photos/FrontierCampLogo.png"));
-//		logo.setHeight(logo.getImageHeight() * .5f);
-//		logo.setWidth(logo.getImageWidth() * .5f);
-//		Paragraph p = new Paragraph();
-//		p.add(logo);
-//		doc.add(p);
-//
-//		Paragraph activityName = new Paragraph();
-//		activityName.add("Adventure Challenge 1");
-//		doc.add(activityName);
-//
-//		Paragraph weekPeriod = new Paragraph();
-//		weekPeriod.add("JW1, Period 1");
-//		doc.add(weekPeriod);
+		// File file = new File("ActivityRoster.pdf");
+		// PdfWriter pdfw = new PdfWriter(file);
+		// PdfDocument pdfDoc = new PdfDocument(pdfw);
+		// pdfDoc.addNewPage();
+		// Document doc = new Document(pdfDoc);
+		// PdfDocumentInfo info = pdfDoc.getDocumentInfo();
+		// info.setTitle("Testing Document Creation");
+		// Image logo = new
+		// Image(ImageDataFactory.create("src/photos/FrontierCampLogo.png"));
+		// logo.setHeight(logo.getImageHeight() * .5f);
+		// logo.setWidth(logo.getImageWidth() * .5f);
+		// Paragraph p = new Paragraph();
+		// p.add(logo);
+		// doc.add(p);
+		//
+		// Paragraph activityName = new Paragraph();
+		// activityName.add("Adventure Challenge 1");
+		// doc.add(activityName);
+		//
+		// Paragraph weekPeriod = new Paragraph();
+		// weekPeriod.add("JW1, Period 1");
+		// doc.add(weekPeriod);
 
 		Activity a = new Activity("AC1", null, 12);
 
 		createRoster(a, 1);
 
-//		doc.close();
+		// doc.close();
 	}
 
 	public static void createRoster(Activity a, int week) throws FileNotFoundException, MalformedURLException {
@@ -55,16 +58,18 @@ public class DocumentCreator {
 		for (Period p : a.getPeriods()) {
 			if (p != null && p.getEnrolled() != 0) {
 
-//				pdfc.moveTo(25, 640);
-//				pdfc.lineTo(575, 640);
-//				pdfc.closePathStroke();
+				// pdfc.moveTo(25, 640);
+				// pdfc.lineTo(575, 640);
+				// pdfc.closePathStroke();
 
 				PdfDocumentInfo info = pdfDoc.getDocumentInfo();
 				info.setTitle(a.getName() + " Roster");
 
 				Paragraph pLogo = new Paragraph();
 				pLogo.setMultipliedLeading(.5f);
-				Image logo = new Image(ImageDataFactory.create(Main.class.getResource("/photos/FrontierCampLogo.png")));
+				URL logoURL = new URL("file://CamperActivities/src/photos/FrontierCampLogo.png");
+				Image logo = new Image(
+						ImageDataFactory.create(logoURL));
 				logo.setHeight(logo.getImageHeight() * .5f);
 				logo.setWidth(logo.getImageWidth() * .5f);
 				pLogo.add(logo);
@@ -98,16 +103,16 @@ public class DocumentCreator {
 				table.getCell(0, 1).setBorderTop(Border.NO_BORDER);
 				table.getCell(0, 1).setBorderRight(Border.NO_BORDER);
 
-//				Paragraph labels = new Paragraph();
-//				labels.add("#");
-//				labels.add(new Tab());
-//				labels.add("Name");
-//				labels.add(new Tab());
+				// Paragraph labels = new Paragraph();
+				// labels.add("#");
+				// labels.add(new Tab());
+				// labels.add("Name");
+				// labels.add(new Tab());
 				if (p.getOrder() == 1 || p.getOrder() == 3) {
-//					labels.add("Next Activity");
+					// labels.add("Next Activity");
 					table.addCell("Next Activity");
 				} else {
-//					labels.add("Previous Activity");
+					// labels.add("Previous Activity");
 					table.addCell("Previous Activity");
 				}
 				table.getCell(0, 2).setBorderLeft(Border.NO_BORDER);
@@ -115,24 +120,24 @@ public class DocumentCreator {
 				table.getCell(0, 2).setBorderRight(Border.NO_BORDER);
 
 				table.addCell("M");
-//				table.getCell(0, 3).setBorderLeft(Border.NO_BORDER);
+				// table.getCell(0, 3).setBorderLeft(Border.NO_BORDER);
 				table.getCell(0, 3).setBorderTop(Border.NO_BORDER);
-//				table.getCell(0, 3).setBorderRight(Border.NO_BORDER);
+				// table.getCell(0, 3).setBorderRight(Border.NO_BORDER);
 				table.getCell(0, 3).setTextAlignment(TextAlignment.CENTER);
 				table.addCell("T");
 				table.getCell(0, 4).setBorderLeft(Border.NO_BORDER);
 				table.getCell(0, 4).setBorderTop(Border.NO_BORDER);
-//				table.getCell(0, 4).setBorderRight(Border.NO_BORDER);
+				// table.getCell(0, 4).setBorderRight(Border.NO_BORDER);
 				table.getCell(0, 4).setTextAlignment(TextAlignment.CENTER);
 				table.addCell("W");
 				table.getCell(0, 5).setBorderLeft(Border.NO_BORDER);
 				table.getCell(0, 5).setBorderTop(Border.NO_BORDER);
-//				table.getCell(0, 5).setBorderRight(Border.NO_BORDER);
+				// table.getCell(0, 5).setBorderRight(Border.NO_BORDER);
 				table.getCell(0, 5).setTextAlignment(TextAlignment.CENTER);
 				table.addCell("R");
 				table.getCell(0, 6).setBorderLeft(Border.NO_BORDER);
 				table.getCell(0, 6).setBorderTop(Border.NO_BORDER);
-//				table.getCell(0, 6).setBorderRight(Border.NO_BORDER);
+				// table.getCell(0, 6).setBorderRight(Border.NO_BORDER);
 				table.getCell(0, 6).setTextAlignment(TextAlignment.CENTER);
 
 				int i = 1;
@@ -156,28 +161,28 @@ public class DocumentCreator {
 						}
 						table.getCell(i, 2).setBorderLeft(Border.NO_BORDER);
 						table.getCell(i, 2).setBorderTop(Border.NO_BORDER);
-//						table.getCell(i, 2).setBorderRight(Border.NO_BORDER);
+						// table.getCell(i, 2).setBorderRight(Border.NO_BORDER);
 						table.addCell(" ");
-//						table.getCell(i, 3).setBorderLeft(Border.NO_BORDER);
+						// table.getCell(i, 3).setBorderLeft(Border.NO_BORDER);
 						table.getCell(i, 3).setBorderTop(Border.NO_BORDER);
-//						table.getCell(i, 3).setBorderRight(Border.NO_BORDER);
+						// table.getCell(i, 3).setBorderRight(Border.NO_BORDER);
 						table.addCell(" ");
-//						table.getCell(i, 4).setBorderLeft(Border.NO_BORDER);
+						// table.getCell(i, 4).setBorderLeft(Border.NO_BORDER);
 						table.getCell(i, 4).setBorderTop(Border.NO_BORDER);
-//						table.getCell(i, 4).setBorderRight(Border.NO_BORDER);
+						// table.getCell(i, 4).setBorderRight(Border.NO_BORDER);
 						table.addCell(" ");
-//						table.getCell(i, 5).setBorderLeft(Border.NO_BORDER);
+						// table.getCell(i, 5).setBorderLeft(Border.NO_BORDER);
 						table.getCell(i, 5).setBorderTop(Border.NO_BORDER);
-//						table.getCell(i, 5).setBorderRight(Border.NO_BORDER);
+						// table.getCell(i, 5).setBorderRight(Border.NO_BORDER);
 						table.addCell(" ");
-//						table.getCell(i, 6).setBorderLeft(Border.NO_BORDER);
+						// table.getCell(i, 6).setBorderLeft(Border.NO_BORDER);
 						table.getCell(i, 6).setBorderTop(Border.NO_BORDER);
-//						table.getCell(i, 6).setBorderRight(Border.NO_BORDER);
+						// table.getCell(i, 6).setBorderRight(Border.NO_BORDER);
 					}
 					++i;
 				}
 
-//				doc.add(labels);
+				// doc.add(labels);
 				doc.add(table);
 
 				if (p.getOrder() != 4) {

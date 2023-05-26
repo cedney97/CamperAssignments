@@ -17,7 +17,7 @@ public class GUI {
 	private Integer VAL = 12;
 	private boolean rosters;
 	private int week;
-	
+
 	public GUI(List<String> acts) {
 		activities = acts;
 		actChecks = new JCheckBox[activities.size()][4];
@@ -38,19 +38,19 @@ public class GUI {
 		return rosters;
 	}
 
-	
-	public void	chooseWeek() {
+	public void chooseWeek() {
 		JSpinner jsp = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
-		Object[] params = {"What week is it?", jsp};
+		Object[] params = { "What week is it?", jsp };
 		JOptionPane.showMessageDialog(null, params);
-		
+
 		week = (int) jsp.getValue();
 	}
-	
-	public void chooseAction() {
-		Object[] options = { "Assignments", "Rosters" };
 
-		int n = JOptionPane.showOptionDialog(null, "Would you like to assign campers or generate rosters?",
+	public void chooseAction() {
+		Object[] options = { "Assignments"/* , "Rosters" */ };
+
+		int n = JOptionPane.showOptionDialog(null,
+				"Would you like to assign campers or generate rosters?\nNOTE: Generating roster function will be added later.",
 				"Choose Program Usage", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options,
 				options[0]);
 		rosters = n == 1;
