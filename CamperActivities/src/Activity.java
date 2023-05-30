@@ -5,11 +5,11 @@ import java.util.List;
 public class Activity {
 	private Period[] periods;
 	private String name;
-	
+
 	public Activity(String name, List<Integer> offPeriods, int individualCapacity) {
 		this.name = name;
 		this.periods = new Period[4];
-		
+
 		for (int i = 0; i < periods.length; ++i) {
 			periods[i] = new Period(name, individualCapacity, 0, i + 1);
 		}
@@ -42,15 +42,15 @@ public class Activity {
 	public boolean hasPeriod(int period) {
 		return periods[period] != null;
 	}
-	
+
 	public Period getPeriod(int n) {
 		return periods[n];
 	}
-	
+
 	public Period[] getPeriods() {
 		return this.periods;
 	}
-	
+
 	public int getTotalPeriods() {
 		int counter = 0;
 		for (Period p : periods) {
@@ -60,7 +60,7 @@ public class Activity {
 		}
 		return counter;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
@@ -73,7 +73,7 @@ public class Activity {
 			}
 		}
 		Collections.sort(periods);
-		
+
 		return periods;
 	}
 }

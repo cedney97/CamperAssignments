@@ -147,6 +147,9 @@ public class GUI {
 		if (name.equals("FC Medley")) {
 			return 24;
 		}
+		if (name.equals("Intro to Horsemanship")) {
+			return 10;
+		}
 		if (name.equals("Horsemanship - Beginner")) {
 			return 10;
 		}

@@ -246,6 +246,7 @@ public class Main {
 		activitiesAlpha.add("Camping Classics");
 		activitiesAlpha.add("Crafts");
 		activitiesAlpha.add("FC Medley");
+		activitiesAlpha.add("Intro to Horsemanship");
 		activitiesAlpha.add("Horsemanship - Beginner");
 		activitiesAlpha.add("Horsemanship - Intermediate");
 		activitiesAlpha.add("Horsemanship - Advanced");
@@ -385,7 +386,8 @@ public class Main {
 			}
 		}
 
-		if (pc.getActivity().getName().equals("Horsemanship - Beginner")
+		if (pc.getActivity().getName().equals("Intro to Horsemanship")
+				|| pc.getActivity().getName().equals("Horsemanship - Beginner")
 				|| pc.getActivity().getName().equals("Horsemanship - Intermediate")
 				|| pc.getActivity().getName().equals("Horsemanship - Advanced")) {
 			if (alreadyHorse) {
@@ -428,7 +430,9 @@ public class Main {
 	}
 
 	public static boolean checkHorse(String name) {
-		return (name.equals("Horsemanship - Advanced") || name.equals("Horsemanship - Intermediate")
+		return (name.equals("Intro to Horsemanship")
+				|| name.equals("Horsemanship - Advanced")
+				|| name.equals("Horsemanship - Intermediate")
 				|| name.equals("Horsemanship - Beginner")) && !alreadyHorse;
 	}
 
@@ -499,7 +503,9 @@ public class Main {
 							acCount++;
 						}
 
-						if (name.equals("Horsemanship - Beginner") || name.equals("Horsemanship - Intermediate")
+						if (name.equals("Intro to Horsemanship")
+								|| name.equals("Horsemanship - Beginner")
+								|| name.equals("Horsemanship - Intermediate")
 								|| name.equals("Horsemanship - Advanced")) {
 							horseCount++;
 						}
