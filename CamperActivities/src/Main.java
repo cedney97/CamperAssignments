@@ -153,31 +153,39 @@ public class Main {
 
 	public static void assignCampers() {
 		for (Camper c : campers) {
-			// System.out.println(c.getName());
+			System.out.println(c.getName());
 			alreadyWakeSki = false;
 			alreadyHorse = false;
 			alreadyAC = false;
 			if (c.hasPrefs()) {
 				LinkedList<Activity> prefs = c.getPrefs();
 				ArrayList<PriorityCounter> prefsWithPriority = new ArrayList<PriorityCounter>();
-				int priority = 6;
+				int priority = prefs.size();
 				for (Activity a : prefs) {
 					prefsWithPriority.add(new PriorityCounter(a, priority));
 					--priority;
 				}
 
-				PriorityCounter[] firstFour = { prefsWithPriority.get(0), prefsWithPriority.get(1),
-						prefsWithPriority.get(2), prefsWithPriority.get(3) };
+				PriorityCounter[] firstFew = {};
+				if (prefs.size() >= 4) {
+					firstFew = new PriorityCounter[] { prefsWithPriority.get(0), prefsWithPriority.get(1),
+							prefsWithPriority.get(2), prefsWithPriority.get(3) };
+				} else {
+					firstFew = new PriorityCounter[prefs.size()];
+					for (int i = 0; i < prefs.size(); ++i) {
+						firstFew[i] = prefsWithPriority.get(i);
+					}
+				}
 
 				// Sort prefs by number of periods
-				bubbleSort(firstFour);
+				bubbleSort(firstFew);
 
 				// Go through each activity
-				for (PriorityCounter pc : firstFour) {
+				for (PriorityCounter pc : firstFew) {
 					enrollCamper(c, pc);
 				}
 
-				if (hasNulls(c.getSchedule())) {
+				if (hasNulls(c.getSchedule()) && prefs.size() == 6) {
 					PriorityCounter fifth = prefsWithPriority.get(4);
 					PriorityCounter sixth = prefsWithPriority.get(5);
 
@@ -192,6 +200,10 @@ public class Main {
 							enrollCamper(c, fifth);
 						}
 					}
+				}
+				if (hasNulls(c.getSchedule()) && prefs.size() == 5) {
+					PriorityCounter fifth = prefsWithPriority.get(4);
+					enrollCamper(c, fifth);
 				}
 
 				ArrayList<Period> sched = c.getSchedule();
@@ -281,12 +293,13 @@ public class Main {
 			Date enrollDate = new Date(scDate.nextInt(), scDate.nextInt(), scDate.nextInt());
 
 			// Skip CampMinder ID
-			lineScanner.next();
+			String id = lineScanner.next();
 
-			// Get first name, last name, and lake permission
+			// Get first name, last name
 			// Once received, create Camper out of that data
 			String lastName = lineScanner.next();
 			String firstName = lineScanner.next();
+			lineScanner.next();
 			Camper c = new Camper(firstName, lastName, enrollDate);
 
 			// System.out.println(firstName + " " + lastName);
@@ -298,19 +311,20 @@ public class Main {
 			// "and " as delimiter
 			String prefRaw = lineScanner.nextLine();
 			if (prefRaw.length() > 1) {
-
+				prefRaw = prefRaw.substring(2, prefRaw.length() - 1);
 				Scanner scPref = new Scanner(prefRaw);
-				scPref.useDelimiter(",");
-				scPref.next(); // Skips lake permission
-				String rest = scPref.nextLine();
-				rest = rest.substring(2, rest.length() - 1);
-				scPref.close();
-				scPref = new Scanner(rest);
+				// scPref.useDelimiter(",");
+				// // scPref.next(); // Skips lake permission
+				// String rest = scPref.nextLine();
+				// rest = rest.substring(2, rest.length() - 1);
+				// scPref.close();
+				// scPref = new Scanner(rest);
 				scPref.useDelimiter(", | and ");
 
 				// Separate each preference and put into list
 				while (scPref.hasNext()) {
-					prefs.add(activities.get(scPref.next()));
+					String proxy = scPref.next();
+					prefs.add(activities.get(proxy));
 				}
 				scPref.close();
 			} else {
@@ -319,6 +333,7 @@ public class Main {
 
 			// Add Camper and preferences to list and map, close Scanners
 			c.addPrefs(prefs);
+			c.setID(id);
 			campers.add(c);
 			lineScanner.close();
 			scDate.close();
@@ -441,6 +456,8 @@ public class Main {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Enroll Date");
 			sb.append(",");
+			sb.append("CampMinder ID");
+			sb.append(",");
 			sb.append("Last Name");
 			sb.append(",");
 			sb.append("First Name");
@@ -473,6 +490,8 @@ public class Main {
 
 			for (Camper c : campers) {
 				sb.append(c.getEnrollDate().toString());
+				sb.append(",");
+				sb.append(c.getID());
 				sb.append(",");
 				sb.append(c.getLastName());
 				sb.append(",");

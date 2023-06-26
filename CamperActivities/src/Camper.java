@@ -11,6 +11,7 @@ public class Camper implements Comparable<Camper> {
 	private int scheduleScore;
 	private boolean hasPlaceholder;
 	private boolean noPrefs;
+	private String id;
 
 	public Camper(String firstName, String lastName, boolean lakePermission, Date enrollDate) {
 		this.schedule = new ArrayList<>();
@@ -19,13 +20,14 @@ public class Camper implements Comparable<Camper> {
 		this.enrollDate = enrollDate;
 		this.scheduleScore = 0;
 		this.hasPlaceholder = false;
+		this.id = "";
 
 		for (int i = 0; i < 4; ++i) {
 			this.schedule.add(null);
 		}
 		noPrefs = false;
 	}
-	
+
 	public Camper(String firstName, String lastName, Date enrollDate) {
 		this.schedule = new ArrayList<>();
 		this.firstName = firstName;
@@ -39,7 +41,7 @@ public class Camper implements Comparable<Camper> {
 		}
 		noPrefs = false;
 	}
-	
+
 	public Camper(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -48,7 +50,7 @@ public class Camper implements Comparable<Camper> {
 		this.prefs = null;
 		this.scheduleScore = 0;
 		this.hasPlaceholder = false;
-		
+
 		for (int i = 0; i < 4; ++i) {
 			this.schedule.add(null);
 		}
@@ -149,8 +151,16 @@ public class Camper implements Comparable<Camper> {
 	public String toString() {
 		return this.getName();
 	}
-	
+
 	public boolean hasPrefs() {
 		return !noPrefs;
+	}
+
+	public void setID(String id) {
+		this.id = id;
+	}
+
+	public String getID() {
+		return this.id;
 	}
 }
