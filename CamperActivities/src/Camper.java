@@ -12,6 +12,7 @@ public class Camper implements Comparable<Camper> {
 	private boolean hasPlaceholder;
 	private boolean noPrefs;
 	private String id;
+    private boolean hasLakePermission;
 
 	public Camper(String firstName, String lastName, boolean lakePermission, Date enrollDate) {
 		this.schedule = new ArrayList<>();
@@ -20,6 +21,7 @@ public class Camper implements Comparable<Camper> {
 		this.enrollDate = enrollDate;
 		this.scheduleScore = 0;
 		this.hasPlaceholder = false;
+        this.hasLakePermission = lakePermission;
 		this.id = "";
 
 		for (int i = 0; i < 4; ++i) {
@@ -83,6 +85,10 @@ public class Camper implements Comparable<Camper> {
 	public void addScore(int add) {
 		this.scheduleScore += add;
 	}
+
+    public boolean hasLakefrontPermission() {
+        return this.hasLakePermission;
+    }
 
 	public LinkedList<Activity> getPrefs() {
 		return this.prefs;

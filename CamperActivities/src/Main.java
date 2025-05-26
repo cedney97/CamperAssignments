@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,6 +26,10 @@ public class Main {
 	private static boolean alreadyAC = false;
 	private static boolean debug = false;
 
+    private final static List<String> ropes = new LinkedList<String>(Arrays.asList("Adventure Challenge 1", "Adventure Challenge 2"));
+    private final static List<String> lake = new LinkedList<String>(Arrays.asList("Camping Classics", "Outdoorsmanship", "Wakeboarding", "Waterskiing", "Kayaking"));
+    private final static List<String> wakeSki = new LinkedList<String>(Arrays.asList("Wakeboarding", "Waterskiing"));
+    private final static List<String> horses = new LinkedList<String>(Arrays.asList("Intro to Horsemanship", "Horsemanship - Beginner", "Horsemanship - Intermediate", "Horsemanship - Advanced"));
 	public static void main(String[] args) throws FileNotFoundException, MalformedURLException {
 		generateActivities();
 
@@ -299,8 +304,8 @@ public class Main {
 			// Once received, create Camper out of that data
 			String lastName = lineScanner.next();
 			String firstName = lineScanner.next();
-			lineScanner.next();
-			Camper c = new Camper(firstName, lastName, enrollDate);
+			boolean lakePermission = lineScanner.next().equals("Yes");
+			Camper c = new Camper(firstName, lastName, lakePermission, enrollDate);
 
 			// System.out.println(firstName + " " + lastName);
 
@@ -313,12 +318,6 @@ public class Main {
 			if (prefRaw.length() > 1) {
 				prefRaw = prefRaw.substring(2, prefRaw.length() - 1);
 				Scanner scPref = new Scanner(prefRaw);
-				// scPref.useDelimiter(",");
-				// // scPref.next(); // Skips lake permission
-				// String rest = scPref.nextLine();
-				// rest = rest.substring(2, rest.length() - 1);
-				// scPref.close();
-				// scPref = new Scanner(rest);
 				scPref.useDelimiter(", | and ");
 
 				// Separate each preference and put into list
@@ -383,28 +382,29 @@ public class Main {
 
 	public static void enrollCamper(Camper c, PriorityCounter pc) {
 
-		if (pc.getActivity().getName().equals("Adventure Challenge 2")
-				|| pc.getActivity().getName().equals("Adventure Challenge 1")) {
-			if (alreadyAC) {
-				return;
-			}
+        if (ropes.contains(pc.getActivity().getName())) {
+            if (alreadyAC) {
+                return;
+            }
+            
 			if (pc.getActivity().getName().equals("Adventure Challenge 1")) {
 				if (c.getPrefs().contains(activities.get("Adventure Challenge 2"))) {
 					pc = new PriorityCounter(activities.get("Adventure Challenge 2"), pc.getScore());
 				}
 			}
-		}
+        }
 
-		if (pc.getActivity().getName().equals("Wakeboarding") || pc.getActivity().getName().equals("Waterskiing")) {
+        if (wakeSki.contains(pc.getActivity().getName())) {
 			if (alreadyWakeSki) {
 				return;
 			}
 		}
 
-		if (pc.getActivity().getName().equals("Intro to Horsemanship")
-				|| pc.getActivity().getName().equals("Horsemanship - Beginner")
-				|| pc.getActivity().getName().equals("Horsemanship - Intermediate")
-				|| pc.getActivity().getName().equals("Horsemanship - Advanced")) {
+        if (!c.hasLakefrontPermission() && lake.contains(pc.getActivity().getName())) {
+            return;
+        }
+
+		if (horses.contains(pc.getActivity().getName())) {
 			if (alreadyHorse) {
 				return;
 			}
@@ -462,6 +462,8 @@ public class Main {
 			sb.append(",");
 			sb.append("First Name");
 			sb.append(",");
+            sb.append("Has Lake Perms");
+            sb.append(",");
 			sb.append("Activity 1");
 			sb.append(",");
 			sb.append("Activity 2");
@@ -497,6 +499,8 @@ public class Main {
 				sb.append(",");
 				sb.append(c.getFirstName());
 				sb.append(",");
+                sb.append(c.hasLakefrontPermission() ? "Yes" : "No");
+                sb.append(",");
 				for (Period p : c.getSchedule()) {
 					sb.append(p.getName());
 					sb.append(",");
